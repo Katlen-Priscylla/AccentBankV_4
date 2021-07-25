@@ -80,6 +80,7 @@ public class ContaCorrenteService {
 		valor = contaCorrente.getValor() + valor ;
 		contaCorrente.setValor(valor);
 		contaCorrenteRepository.save(contaCorrente);
+		
 		Date date = new Date();
 		
 		Extrato extrato= new Extrato(null,date,valorTransacao,Transacao.DEPOSITO,contaCorrente);
