@@ -1,5 +1,6 @@
 package com.accenture.bank.servico;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.accenture.bank.entity.Cliente;
+
 import com.accenture.bank.entity.ContaCorrente;
-import com.accenture.bank.repository.AgenciaRepository;
-import com.accenture.bank.repository.ClienteRepository;
+import com.accenture.bank.entity.Extrato;
+import com.accenture.bank.entity.Transacao;
 import com.accenture.bank.repository.ContaCorrenteRepository;
+import com.accenture.bank.repository.ExtratoRepository;
 
 @Service
 public class ContaCorrenteService {
@@ -22,6 +24,8 @@ public class ContaCorrenteService {
 	ContaCorrenteRepository contaCorrenteRepository;
 //	@Autowired
 //	ClienteRepository clienteRepository;
+	@Autowired
+	ExtratoRepository extratoRepository;
 
 	public ContaCorrente saveConta(ContaCorrente contaCorrente) {
 //		agenciaRepository.save(contaCorrente.getAgencia());
@@ -58,23 +62,41 @@ public class ContaCorrenteService {
 	}
 	
 	public ContaCorrente saque(Long id , double valor) {
+
+		double valortransacao = valor;
 		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
 		valor = contaCorrente.getValor() - valor ;
 		contaCorrente.setValor(valor);
 		contaCorrenteRepository.save(contaCorrente);
+		Date date = new Date();
+	
+		Extrato extrato= new Extrato(null,date,valortransacao,Transacao.SAQUE,contaCorrente);
+		extratoRepository.save(extrato);
 		return contaCorrente;
 	}
 	public ContaCorrente deposita(Long id , double valor) {
+		double valorTransacao = valor;
 		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
 		valor = contaCorrente.getValor() + valor ;
 		contaCorrente.setValor(valor);
 		contaCorrenteRepository.save(contaCorrente);
+		Date date = new Date();
+		
+		Extrato extrato= new Extrato(null,date,valorTransacao,Transacao.DEPOSITO,contaCorrente);
+		extratoRepository.save(extrato);
+		
 		return contaCorrente;
 	}
 	public Map<String,ContaCorrente> transfere(Long idOrigem, Long idDestino, double valor) {
 	
+		double valorTransacao = valor;
 		ContaCorrente origem =saque(idOrigem,valor);
+       Date date = new Date();
+		Extrato extrato= new Extrato(null,date,valorTransacao,Transacao.TRANSFERENCIA,origem);
+		extratoRepository.save(extrato);
 		ContaCorrente destino = deposita(idDestino,valor);
+		Extrato extrato1= new Extrato(null,date,valorTransacao,Transacao.DEPOSITO,destino);
+		extratoRepository.save(extrato1);
 		Map<String,ContaCorrente> contas = new HashMap<>();
 		contas.put("origem",origem);
 		contas.put("destino", destino);

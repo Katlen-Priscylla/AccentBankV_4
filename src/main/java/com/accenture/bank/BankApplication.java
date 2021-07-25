@@ -37,7 +37,7 @@ public class BankApplication implements CommandLineRunner{
 			clienteRepository.save(cliente1);
 		Agencia agencia = new Agencia(null,"Bradesco centro","Rua do centro",null);
   	    agencia = agenciaRepository.save(agencia);
-		ContaCorrente conta1 = new ContaCorrente(null,"49-9",(double)700.5,agencia,cliente1);
+		ContaCorrente conta1 = new ContaCorrente(null,"49-9",(double)700.5,agencia,cliente1,null);
 		contaCorrenteRepository.save(conta1);
 		
 	
