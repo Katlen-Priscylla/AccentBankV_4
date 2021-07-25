@@ -21,7 +21,7 @@ public class ClienteController {
 	@Autowired
 	ClienteService clienteService;
 	
-	@PostMapping
+	@PostMapping 
 	public Cliente save(@RequestBody Cliente cliente) {
 		return clienteService.saveCliente(cliente);
 	}
