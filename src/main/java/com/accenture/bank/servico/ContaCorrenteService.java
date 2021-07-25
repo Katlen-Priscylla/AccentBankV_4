@@ -1,6 +1,8 @@
 package com.accenture.bank.servico;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,30 @@ public class ContaCorrenteService {
 
 	public void deletaContaCorrente(Long id) {
 		contaCorrenteRepository.deleteById(id);
+	}
+	
+	public ContaCorrente saque(Long id , double valor) {
+		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
+		valor = contaCorrente.getValor() - valor ;
+		contaCorrente.setValor(valor);
+		contaCorrenteRepository.save(contaCorrente);
+		return contaCorrente;
+	}
+	public ContaCorrente deposita(Long id , double valor) {
+		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
+		valor = contaCorrente.getValor() + valor ;
+		contaCorrente.setValor(valor);
+		contaCorrenteRepository.save(contaCorrente);
+		return contaCorrente;
+	}
+	public Map<String,ContaCorrente> transfere(Long idOrigem, Long idDestino, double valor) {
+	
+		ContaCorrente origem =saque(idOrigem,valor);
+		ContaCorrente destino = deposita(idDestino,valor);
+		Map<String,ContaCorrente> contas = new HashMap<>();
+		contas.put("origem",origem);
+		contas.put("destino", destino);
+		
+		return contas;
 	}
 }

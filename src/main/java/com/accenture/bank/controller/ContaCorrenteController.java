@@ -1,6 +1,7 @@
 package com.accenture.bank.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -48,4 +49,17 @@ public class ContaCorrenteController {
 		contaCorrenteService.deletaContaCorrente(id);
 	}
 	
+	@PutMapping("{id}/sacar")
+	public ContaCorrente saque(@PathVariable Long id, @RequestBody double valor) {
+	return	contaCorrenteService.saque(id, valor);
+	}
+	@PutMapping("{id}/depositar")
+	public ContaCorrente deposita(@PathVariable Long id, @RequestBody double valor) {
+	return	contaCorrenteService.deposita(id, valor);
+	}
+	
+	@PutMapping("{idOrigem}/transferir/{idDestino}")
+	public Map<String,ContaCorrente> transfere(@PathVariable Long idOrigem,@PathVariable Long idDestino, @RequestBody double valor) {
+	return	contaCorrenteService.transfere(idOrigem, idDestino, valor);
+	}
 }
