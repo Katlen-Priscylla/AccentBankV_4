@@ -3,6 +3,7 @@ package com.accenture.bank.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,22 +29,18 @@ public class ContaCorrente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idContaCorrente;
 	private String ContaCorrenteNumero;
-	private double valor;
-	
+	private double saldo;
+
 	@ManyToOne
-	
+
 	private Agencia agencia;
-	
-	
+
 //	private Long idAgencia1= agencia.getIdAgencia();
-	
+
 	@OneToOne
-private Cliente cliente;
-	@OneToMany(mappedBy ="contaCorrente")
+	private Cliente cliente;
+	@OneToMany(mappedBy = "contaCorrente",cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List <Extrato> transacoes = new ArrayList<>();
-	
-
-
+	private List<Extrato> transacoes = new ArrayList<>();
 
 }

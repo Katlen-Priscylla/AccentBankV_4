@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.accenture.bank.entity.ContaCorrente;
 import com.accenture.bank.entity.Extrato;
+import com.accenture.bank.entity.Transacao;
 import com.accenture.bank.servico.ContaCorrenteService;
 import com.accenture.bank.servico.ExtratoService;
-
 
 @RestController
 @RequestMapping("contas/")
@@ -27,47 +27,50 @@ public class ContaCorrenteController {
 	ContaCorrenteService contaCorrenteService;
 	@Autowired
 	ExtratoService extratoService;
-	
-	@PostMapping 
+
+	@PostMapping
 	public ContaCorrente save(@RequestBody ContaCorrente contaCorrente) {
 		return contaCorrenteService.saveConta(contaCorrente);
 	}
-	
+
 	@GetMapping
-	public List<ContaCorrente> findAll (){
+	public List<ContaCorrente> findAll() {
 		return contaCorrenteService.getAllContaCorrente();
 	}
-	
-	
+
 	@GetMapping("{id}")
 	public ContaCorrente findId(@PathVariable Long id) {
 		return contaCorrenteService.getByIdContaCorrente(id);
 	}
+
 	@PutMapping("{id}")
-	public ContaCorrente atualizaContaCorrente(@PathVariable Long id, @RequestBody ContaCorrente contaCorrente ) {
+	public ContaCorrente atualizaContaCorrente(@PathVariable Long id, @RequestBody ContaCorrente contaCorrente) {
 		return contaCorrenteService.atualizaContaCorrente(id, contaCorrente);
 	}
+
 	@DeleteMapping("{id}")
 	public void deletaById(@PathVariable Long id) {
 		contaCorrenteService.deletaContaCorrente(id);
 	}
-	
+
 	@PutMapping("{id}/sacar")
 	public ContaCorrente saque(@PathVariable Long id, @RequestBody double valor) {
-	return	contaCorrenteService.saque(id, valor);
+		return contaCorrenteService.saque(id, valor,Transacao.SAQUE);
 	}
+
 	@PutMapping("{id}/depositar")
 	public ContaCorrente deposita(@PathVariable Long id, @RequestBody double valor) {
-	return	contaCorrenteService.deposita(id, valor);
+		return contaCorrenteService.deposita(id, valor, Transacao.DEPOSITO);
 	}
-	
+
 	@PutMapping("{idOrigem}/transferir/{idDestino}")
-	public Map<String,ContaCorrente> transfere(@PathVariable Long idOrigem,@PathVariable Long idDestino, @RequestBody double valor) {
-	return	contaCorrenteService.transfere(idOrigem, idDestino, valor);
+	public Map<String, ContaCorrente> transfere(@PathVariable Long idOrigem, @PathVariable Long idDestino,
+			@RequestBody double valor) {
+		return contaCorrenteService.transfere(idOrigem, idDestino, valor);
 	}
-	
+
 	@GetMapping("{id}/extrato")
-	public List<Extrato> findExtrato (@PathVariable Long id){
+	public List<Extrato> findExtrato(@PathVariable Long id) {
 		return extratoService.getByContaId(id);
 	}
 }

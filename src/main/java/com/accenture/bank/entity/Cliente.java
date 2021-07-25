@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 //import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,13 +23,9 @@ public class Cliente {
 	private String nome;
 	private String cpf;
 	private String telefone;
-	
-	
 
-//	@OneToOne
-//	private Endereco endereco;
-
-
-
+	@OneToOne
+	@JoinColumn(name = "id_endereco")
+	private Endereco endereco;
 
 }

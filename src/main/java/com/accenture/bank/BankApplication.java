@@ -17,19 +17,20 @@ import com.accenture.bank.repository.ContaCorrenteRepository;
 
 
 @SpringBootApplication
-public class BankApplication implements CommandLineRunner{
-	@Autowired
-	AgenciaRepository agenciaRepository;
-	@Autowired
-	ContaCorrenteRepository contaCorrenteRepository;
-	@Autowired
-	ClienteRepository clienteRepository;
-	
+public class BankApplication {
+//	@Autowired
+//	AgenciaRepository agenciaRepository;
+//	@Autowired
+//	ContaCorrenteRepository contaCorrenteRepository;
+//	@Autowired
+//	ClienteRepository clienteRepository;
+//	
 
 	public static void main(String[] args) {
 		SpringApplication.run(BankApplication.class, args);
 	}
-
+}
+/*
 	@Override
 	public void run(String... args) throws Exception {
 		
@@ -56,4 +57,4 @@ public class BankApplication implements CommandLineRunner{
 		
 	}
 
-}
+}*/
