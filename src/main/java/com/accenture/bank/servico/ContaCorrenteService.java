@@ -56,6 +56,10 @@ public class ContaCorrenteService {
 	}
 
 	public ContaCorrente saque(Long id, double valor, Transacao transacao) {
+		
+//		if(valor <= 0) {
+//			throw
+//		}
 
 		double valortransacao = valor;
 		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
