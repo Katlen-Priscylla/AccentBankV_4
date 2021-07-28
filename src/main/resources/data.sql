@@ -6,3 +6,6 @@ insert into cliente(cpf,nome,telefone,id_endereco) values ('111333222','katlen',
 
 insert into conta_corrente(conta_corrente_numero,saldo,agencia_id_agencia,cliente_id_cliente) values('9292',100.00,1,1);
 insert into conta_corrente(conta_corrente_numero,saldo,agencia_id_agencia,cliente_id_cliente) values('1110',2500.00,1,2);
+
+insert into extrato values(1,'2021-07-28','SAQUE',100,1);
+
