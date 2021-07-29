@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import com.accenture.bank.entity.ContaCorrente;
 import com.accenture.bank.entity.Extrato;
 import com.accenture.bank.entity.Transacao;
+import com.accenture.bank.exceptions.ContaNaoEncontradaException;
+import com.accenture.bank.exceptions.FormatoDeContaInvalidoException;
+import com.accenture.bank.exceptions.TransacaoInvalidaException;
+import com.accenture.bank.exceptions.ValorInvalidoException;
 import com.accenture.bank.repository.ContaCorrenteRepository;
 import com.accenture.bank.repository.ExtratoRepository;
 
@@ -25,6 +29,14 @@ public class ContaCorrenteService {
 
 	public ContaCorrente saveConta(ContaCorrente contaCorrente) {
 
+		if (contaCorrente.getContaCorrenteNumero().isEmpty() || contaCorrente.getContaCorrenteNumero() == null
+				|| contaCorrente.getAgencia().getIdAgencia() == null
+				|| contaCorrente.getCliente().getIdCliente() == null || Double.isNaN(contaCorrente.getSaldo())
+				|| contaCorrente.getSaldo() < 0.0) {
+			// retornar uma exception
+			throw new FormatoDeContaInvalidoException("Esta conta nao atende aos requesitos de formatacao");
+		}
+
 		return contaCorrenteRepository.save(contaCorrente);
 
 	}
@@ -36,6 +48,10 @@ public class ContaCorrenteService {
 	}
 
 	public ContaCorrente getByIdContaCorrente(Long id) {
+
+		if (!contaCorrenteRepository.existsById(id)) {
+			throw new ContaNaoEncontradaException();
+		}
 		return contaCorrenteRepository.findById(id).get();
 	}
 
@@ -56,13 +72,16 @@ public class ContaCorrenteService {
 	}
 
 	public ContaCorrente saque(Long id, double valor, Transacao transacao) {
-		
-//		if(valor <= 0) {
-//			throw
-//		}
+		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
+
+		if (valor < 2) {
+			throw new ValorInvalidoException("Valor inválido.");
+		} else if (valor > contaCorrente.getSaldo()) {
+			throw new ValorInvalidoException("Saldo insuficiente.");
+		}
 
 		double valortransacao = valor;
-		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
+
 		valor = contaCorrente.getSaldo() - valor;
 		contaCorrente.setSaldo(valor);
 		contaCorrenteRepository.save(contaCorrente);
@@ -72,8 +91,12 @@ public class ContaCorrenteService {
 	}
 
 	public ContaCorrente deposita(Long id, double valor, Transacao transacao) {
-		double valorTransacao = valor;
 		ContaCorrente contaCorrente = contaCorrenteRepository.findById(id).get();
+
+		if (valor <= 0) {
+			throw new ValorInvalidoException("Valor inválido para depósito.");
+		}
+		double valorTransacao = valor;
 		valor = contaCorrente.getSaldo() + valor;
 		contaCorrente.setSaldo(valor);
 		contaCorrenteRepository.save(contaCorrente);
@@ -85,9 +108,12 @@ public class ContaCorrenteService {
 	}
 
 	public Map<String, ContaCorrente> transfere(Long idOrigem, Long idDestino, double valor) {
+		
+		if (idOrigem == idDestino && idDestino == null) {
+			throw new TransacaoInvalidaException("Conta inválida para transferência.");
+		}
 
 		ContaCorrente origem = saque(idOrigem, valor, Transacao.TRANSFERENCIA);
-
 		ContaCorrente destino = deposita(idDestino, valor, Transacao.TRANSFERENCIA);
 
 		Map<String, ContaCorrente> contas = new HashMap<>();

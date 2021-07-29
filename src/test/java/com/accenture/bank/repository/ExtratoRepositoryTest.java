@@ -49,6 +49,8 @@ public class ExtratoRepositoryTest {
 		Assertions.assertEquals(extratoRetornado.get().getIdExtrato(), idRequerido);
 
 	}
+	
+	
 
 	
 }
