@@ -80,10 +80,12 @@ public class ContaCorrenteController {
 	@GetMapping("{id}/mostrarextrato")
 	public ModelAndView listar(@PathVariable Long id) {
 		List<Extrato> lista = extratoService.getByContaId(id);
+		ContaCorrente conta = contaCorrenteService.getByIdContaCorrente(id);
 		
 		ModelAndView modelAndView = new ModelAndView("mostrarextrato");		
 		modelAndView.addObject("mostrarextrato", lista);
-		
+		modelAndView.addObject("conta", conta);
+		 
 		return modelAndView;
 	}
 }

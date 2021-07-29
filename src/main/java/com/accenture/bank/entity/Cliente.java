@@ -29,7 +29,7 @@ public class Cliente {
 	private String cpf;
 	private String telefone;
 
-	@JsonIgnore
+	
 	@OneToOne
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;
