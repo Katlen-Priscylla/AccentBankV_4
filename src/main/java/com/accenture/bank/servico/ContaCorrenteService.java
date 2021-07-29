@@ -33,7 +33,7 @@ public class ContaCorrenteService {
 				|| contaCorrente.getAgencia().getIdAgencia() == null
 				|| contaCorrente.getCliente().getIdCliente() == null || Double.isNaN(contaCorrente.getSaldo())
 				|| contaCorrente.getSaldo() < 0.0) {
-			// retornar uma exception
+			
 			throw new FormatoDeContaInvalidoException("Esta conta nao atende aos requesitos de formatacao");
 		}
 
@@ -109,7 +109,7 @@ public class ContaCorrenteService {
 
 	public Map<String, ContaCorrente> transfere(Long idOrigem, Long idDestino, double valor) {
 		
-		if (idOrigem == idDestino && idDestino == null) {
+		if (idOrigem == idDestino || idDestino == null) {
 			throw new TransacaoInvalidaException("Conta inválida para transferência.");
 		}
 
