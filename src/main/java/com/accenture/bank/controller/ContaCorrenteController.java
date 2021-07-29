@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.accenture.bank.entity.ContaCorrente;
 import com.accenture.bank.entity.Extrato;
@@ -74,5 +75,17 @@ public class ContaCorrenteController {
 	@GetMapping("{id}/extrato")
 	public List<Extrato> findExtrato(@PathVariable Long id) {
 		return extratoService.getByContaId(id);
+	}
+	
+	@GetMapping("{id}/mostrarextrato")
+	public ModelAndView listar(@PathVariable Long id) {
+		List<Extrato> lista = extratoService.getByContaId(id);
+		ContaCorrente conta = contaCorrenteService.getByIdContaCorrente(id);
+		
+		ModelAndView modelAndView = new ModelAndView("mostrarextrato");		
+		modelAndView.addObject("mostrarextrato", lista);
+		modelAndView.addObject("conta", conta);
+		 
+		return modelAndView;
 	}
 }

@@ -24,6 +24,6 @@ public class ExtratoService {
 			throw  new ContaNaoEncontradaException();
 		}
 		 return contaCorrenteRepository.findById(id).get().getTransacoes();
-		
+		 
 	}
 }
