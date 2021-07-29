@@ -21,14 +21,14 @@ public class ClienteRepositoryTest {
 	@Test
 	public void testCreateCliente() {
 		
-		Cliente cliente = clienteRepository.save(new Cliente(null,"Josefina","48919","494999797979",new Endereco()));
+		Cliente cliente = clienteRepository.save(new Cliente(null,"Josefina","092.832.534-26","494999797979",new Endereco()));
 		
 		assertNotNull(cliente);
 		assertTrue(cliente.getIdCliente()>0);
 	}
 	
 	@Test
-	public void TestcatchCliente() {
+	public void deveRetornarUmClientePorId() {
 		
 		Cliente cliente = clienteRepository.findById(1L).get();
 		

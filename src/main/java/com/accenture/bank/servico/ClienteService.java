@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 //import com.accenture.bank.entity.Agencia;
 import com.accenture.bank.entity.Cliente;
+import com.accenture.bank.exceptions.ClienteNotFoundException;
+import com.accenture.bank.exceptions.FormatoIncorretoCliente;
 import com.accenture.bank.repository.ClienteRepository;
 import com.accenture.bank.repository.EnderecoRepository;
 
@@ -22,10 +24,14 @@ public class ClienteService {
 //	EnderecoRepository enderecoRepository;
 	
 	public Cliente saveCliente(Cliente cliente) {
-		//enderecoRepository.save(cliente.getEndereco());
-		return clienteRepository.save(cliente);
+	if (cliente.getNome().isEmpty() || cliente.getNome().equals(null)||cliente.getNome().isBlank()
+			||cliente.getTelefone()
+			.isEmpty()||cliente.getTelefone().equals(null)||cliente.getTelefone().isBlank()) {
+		throw new FormatoIncorretoCliente();
 	}
+		return clienteRepository.save(cliente);
 	
+	}
 	public List<Cliente> getAllCliente(){
 		
 		return clienteRepository.findAll();
@@ -34,6 +40,8 @@ public class ClienteService {
 	public Cliente getById(Long id) {
 		return clienteRepository.findById(id).get();
 	}
+	
+	
 	public Cliente atualizaCliente(long id, Cliente newCliente) {
 		newCliente.setIdCliente(id);
 		Cliente oldCliente = clienteRepository.findById(id).get();
@@ -42,7 +50,21 @@ public class ClienteService {
 		} else
 			return null ;
 	}
+	
+	
 	public void deletaCliente(Long id) {
-		clienteRepository.deleteById(id);
+		
+		
+		if(!clienteRepository.existsById(id)) {
+			throw  new ClienteNotFoundException();
+		}else
+			
+			clienteRepository.deleteById(id);
+		
 	}
-}
+		
+		
+		
+		//clienteRepository.deleteById(id);
+	}
+

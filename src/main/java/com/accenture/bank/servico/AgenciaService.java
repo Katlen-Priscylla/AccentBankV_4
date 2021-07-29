@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.accenture.bank.entity.Agencia;
-import com.accenture.bank.entity.Agencia;
-import com.accenture.bank.repository.AgenciaRepository;
+//import com.accenture.bank.entity.Agencia;
 import com.accenture.bank.repository.AgenciaRepository;
 //import com.accenture.bank.repository.ContaRepository;
-import com.accenture.bank.repository.EnderecoRepository;
+//import com.accenture.bank.repository.EnderecoRepository;
 
 @Service
 public class AgenciaService {
