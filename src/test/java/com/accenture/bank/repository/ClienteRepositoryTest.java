@@ -26,7 +26,7 @@ public class ClienteRepositoryTest {
 		assertNotNull(cliente);
 		assertTrue(cliente.getIdCliente()>0);
 	}
-	
+	 
 	@Test
 	public void deveRetornarUmClientePorId() {
 		
