@@ -31,11 +31,9 @@ public class ContaCorrente {
 	private String ContaCorrenteNumero;
 	private double saldo;
 
+	@JsonIgnore
 	@ManyToOne
-
 	private Agencia agencia;
-
-//	private Long idAgencia1= agencia.getIdAgencia();
 
 	@OneToOne
 	private Cliente cliente;

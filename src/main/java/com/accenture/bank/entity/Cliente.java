@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class Cliente {
 	private String cpf;
 	private String telefone;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;

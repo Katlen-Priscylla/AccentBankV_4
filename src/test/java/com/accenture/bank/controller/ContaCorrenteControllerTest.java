@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,7 @@ import com.accenture.bank.entity.ContaCorrente;
 import com.accenture.bank.entity.Extrato;
 import com.accenture.bank.entity.Transacao;
 import com.accenture.bank.servico.ContaCorrenteService;
+import com.accenture.bank.servico.ExtratoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
@@ -46,6 +49,9 @@ public class ContaCorrenteControllerTest {
 	
 	@MockBean
 	private ContaCorrenteService service;
+	
+	@MockBean
+	private ExtratoService extratoService;
 
 	@Test
 	public void deveRetornar200AoSalvarumaConta() throws Exception {
@@ -137,68 +143,103 @@ public class ContaCorrenteControllerTest {
 		
 	}
 	
-//	@Test
-//	public void deveSacarValorNaContaPassadaPeloId() throws Exception {
-//		URI uri = new URI("/contas/1/sacar");
-//		final Double VALOR_SAQUE = 10.0;
-//		
-//		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-//				.put(uri)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.contentType(MediaType.ALL_VALUE)
-//				.content(Double.toString(VALOR_SAQUE))
-//				;
-//		
-//		BDDMockito.given(service.saque(Mockito.anyLong(), VALOR_SAQUE, Transacao.SAQUE)).willReturn(null);
-//		
-//		mockMvc.perform(request)
-//		.andExpect(MockMvcResultMatchers.status().is(200))
-//		.andExpect(jsonPath("saldo").value(40.0))
-//		;
-//	}
-//	
-//	@Test
-//	public void deveDepositarValorNaContaPassadaPeloId() throws Exception{
-//		URI uri = new URI("/contas/1/depositar");
-//		final String VALOR_DEPOSITADO = "10";
-//		
-//		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-//				.put(uri)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.contentType(MediaType.ALL_VALUE)
-//				.content(VALOR_DEPOSITADO)
-//				;
-//		
-//		BDDMockito.given(service.deposita(Mockito.anyLong(), VALOR_DEPOSITADO, Transacao.DEPOSITO)).willReturn(null);
-//		
-//		mockMvc.perform(request)
-//		.andExpect(MockMvcResultMatchers.status().is(200))
-//		.andExpect(jsonPath("saldo").value(60.0))
-//		;
-//	}
-//	@Test
-//	public void deveTransferirValorParaContasDiferentes(){
-//	URI uri = new URI("/contas/1/transferir/2");
+	@Test
+	public void deveSacarValorNaContaPassadaPeloId() throws Exception {
+		URI uri = new URI("/contas/1/sacar");
+		final Double VALOR_SAQUE = 10.0;
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+				.put(uri)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(Double.toString(VALOR_SAQUE))
+				;
+		ContaCorrente contaResponse = new ContaCorrente(null, "1212", 40.0, new Agencia(), new Cliente(),
+				new ArrayList<Extrato>());
+		BDDMockito.given(service.saque(Mockito.anyLong(), Mockito.anyDouble(), Mockito.any())).willReturn(contaResponse);
+		
+		mockMvc.perform(request)
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(jsonPath("saldo").value(40.0))
+		;
+	}
 	
+	@Test
+	public void deveDepositarValorNaContaPassadaPeloId() throws Exception{
+		URI uri = new URI("/contas/1/depositar");
+		final String VALOR_DEPOSITADO = "10";
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+				.put(uri)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(VALOR_DEPOSITADO)
+				;
+		
+		ContaCorrente contaResponse = new ContaCorrente(null, "1212", 60.0, new Agencia(), new Cliente(),
+				new ArrayList<Extrato>());
+		BDDMockito.given(service.deposita(Mockito.anyLong(), Mockito.anyDouble(), Mockito.any())).willReturn(contaResponse);
+		
+		mockMvc.perform(request)
+		.andExpect(MockMvcResultMatchers.status().is(200))
+		.andExpect(jsonPath("saldo").value(60.0))
+		;
+	}
+	@Test
+	public void deveTransferirValorParaContasDiferentes() throws Exception{
+	URI uri = new URI("/contas/1/transferir/2");
+	
+	final String VALOR_TRANSFERIDO = "10";
+	
+	MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+			.put(uri)
+			.accept(MediaType.APPLICATION_JSON)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(VALOR_TRANSFERIDO)
+			;
+	
+	ContaCorrente contaResponseOrigem = new ContaCorrente(1L, "1212", 60.0, new Agencia(), new Cliente(),
+			new ArrayList<Extrato>());
+	ContaCorrente contaResponseDestino = new ContaCorrente(2L, "2233", 40.0, new Agencia(), new Cliente(),
+			new ArrayList<Extrato>());
+	
+	
+	Map<String, ContaCorrente> retornoTransferencia = new HashMap<>();
+	
+	retornoTransferencia.put("origem", contaResponseOrigem);
+	retornoTransferencia.put("destino", contaResponseDestino);
+	
+	BDDMockito.given(service.transfere(Mockito.anyLong(), Mockito.anyLong(), Mockito.anyDouble())).willReturn(retornoTransferencia);
+	
+	mockMvc.perform(request)
+	.andExpect(MockMvcResultMatchers.status().is(200))
+	.andExpect(jsonPath("$.origem['saldo']").value(60.0))
+	.andExpect(jsonPath("$.destino['saldo']").value(40.0))
+	.andExpect(jsonPath("$.origem['idContaCorrente']").value(1))
+	.andExpect(jsonPath("$.destino['idContaCorrente']").value(2))
+	
+	;
 
-//	}
+	}
 	
-//	@Test
-//	public void deveRetornarExtratoPorId() throws Exception{
-//		URI uri = new URI("/contas/1/extrato");
-//		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON);
-//		List<Extrato> extratos = new ArrayList<>();
-//		
-//		extratos.add(new Extrato());
-//		extratos.add(new Extrato());
-//		extratos.add(new Extrato());
-//		extratos.add(new Extrato());
-//		
-//		BDDMockito.given(service.findExtrato(1L)).willReturn(extratos);
-//		
-//		
-//		
-//	}
+	@Test
+	public void deveRetornarExtratoPorId() throws Exception{
+		URI uri = new URI("/contas/1/extrato");
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON);
+		List<Extrato> extratos = new ArrayList<>();
+		
+		extratos.add(new Extrato());
+		extratos.add(new Extrato());
+		extratos.add(new Extrato());
+		extratos.add(new Extrato());
+		
+		BDDMockito.given(extratoService.getByContaId(1L)).willReturn(extratos);
+		
+		mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().is(200))
+		.andExpect(jsonPath("$[*]", hasSize(4)));
+		
+		
+	}
 	
 	private ContaCorrente criarContaValida() {
 		ContaCorrente contaValida = new ContaCorrente(null, "1212", 50.0, new Agencia(), new Cliente(),
