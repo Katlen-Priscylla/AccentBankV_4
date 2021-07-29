@@ -38,17 +38,24 @@ public class ClienteService {
 		
 	}
 	public Cliente getById(Long id) {
+		
+		if(!clienteRepository.existsById(id)) {
+			throw  new ClienteNotFoundException();
+		}
 		return clienteRepository.findById(id).get();
 	}
 	
 	
 	public Cliente atualizaCliente(long id, Cliente newCliente) {
+		
 		newCliente.setIdCliente(id);
+		
 		Cliente oldCliente = clienteRepository.findById(id).get();
-		if (oldCliente!=null) {
-			return clienteRepository.save(newCliente);
-		} else
-			return null ;
+		
+		if (oldCliente==null ||!clienteRepository.existsById(id)) {
+			throw  new ClienteNotFoundException();
+		} 
+		return clienteRepository.save(newCliente);
 	}
 	
 	
@@ -57,7 +64,7 @@ public class ClienteService {
 		
 		if(!clienteRepository.existsById(id)) {
 			throw  new ClienteNotFoundException();
-		}else
+		}
 			
 			clienteRepository.deleteById(id);
 		
