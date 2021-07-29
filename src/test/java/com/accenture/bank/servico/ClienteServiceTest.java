@@ -5,7 +5,9 @@ package com.accenture.bank.servico;
 	import static org.mockito.Mockito.verify;
 	import static org.mockito.Mockito.when;
 
-	import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 	import javax.validation.ValidationException;
 
@@ -44,7 +46,7 @@ import com.accenture.bank.repository.ClienteRepository;
 
 		
 		@Test
-		public void deveLevantarExcecaoQuandoNaoEncontrarId() {
+		public void deveLevantarExcecaoQuandoNaoEncontrarIdnoDelete() {
 			// cenario
 			long idInvalido = 123L;
 			
@@ -82,6 +84,54 @@ import com.accenture.bank.repository.ClienteRepository;
 		
 		}
 		
+		@Test
+		public void deveRetornarTodosOsClientes(){
+			
+			List<Cliente> clientes = new ArrayList<>();
+			
+			Cliente cliente = new Cliente(1L, "Katlen", "09283253426", "8199999999", new Endereco());
+			Cliente cliente1 = new Cliente(2L, "Joao", "09283253426", "8199999999", new Endereco());
+			Cliente cliente2 = new Cliente(3L, "José", "09283253426", "8199999999", new Endereco());
+
+			clientes.add(cliente);
+			clientes.add(cliente1);
+			clientes.add(cliente2);
+
+			Mockito.when(clienteRepository.findAll()).thenReturn(clientes);
+			
+			Assertions.assertThat(clientes).isEqualTo(clienteRepository.findAll());
+		}
+		
+		
+		@Test
+		public void deveLevantarExcecaoQuandoNaoEncontrarIdnoGet() {
+			// cenario
+			long idInvalido = 123L;
+			
+	
+		Throwable clienteExcecao = Assertions.catchThrowable(() -> clienteService.getById(idInvalido));
+		
+		Assertions.assertThat(clienteExcecao)
+		.isInstanceOf(ClienteNotFoundException.class)
+		.hasMessage("cliente nao encontrado");
+	
+		}
+		
+//		@Test
+//		public void deveLevantarExcecaoQuandoNaoEncontrarIdnoPut() {
+//			// cenario
+//			long idInvalido = 123L;
+//			Cliente cliente = new Cliente(1L,"Joao","092.832.534-26","8888.9999",new Endereco());
+//			Cliente cliente2 = new Cliente(3L, "José", "09283253426", "8199999999", new Endereco());
+//	
+//		Throwable clienteExcecao = Assertions.catchThrowable(() -> clienteRepository.save(cliente));
+//		
+//		Assertions.assertThat(clienteExcecao)
+//		.isInstanceOf(ClienteNotFoundException.class)
+//		.hasMessage("cliente nao encontrado");
+//		}
 	 }
+		
+	
 
 

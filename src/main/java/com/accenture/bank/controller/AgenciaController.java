@@ -29,8 +29,8 @@ public class AgenciaController {
 	@Autowired
 	private AgenciaService agenciaService;
 
-	@Autowired
-	private EnderecoService enderecoService;
+//	@Autowired
+//	private EnderecoService enderecoService;
 
 	@PostMapping
 	public Agencia save( @RequestBody Agencia agencia) {
