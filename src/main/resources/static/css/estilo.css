@@ -1,8 +1,19 @@
 body {
-  margin-top: 50px;
-  
+
+background-image: url(/css/fundo2.jpg);
+background-clip: padding-box;
+    background-size:cover;
+   
+ 
 }
 
 footer {
     color: #AAA
+}
+
+img { 
+  width: 10%;
+  height: 20%;
+  border-radius: 30px;
+  
 }
