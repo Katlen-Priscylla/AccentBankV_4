@@ -1,12 +1,19 @@
 body {
 
-background: url(/css/fundo2.jpg) fixed ;
-background-repeat:no-repeat;
-    background-size:cover;
-    background-attachment: fixed;
+background-image: url(/css/fundo2.jpg) fixed ;
+background-clip: padding-box;
+    background-size:contain;
+   
  
 }
 
 footer {
     color: #AAA
+}
+
+img { 
+  width: 50%;
+  height: 20%;
+  opacity: 0.3;
+  border-radius: 50px;
 }
