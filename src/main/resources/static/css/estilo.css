@@ -1,8 +1,8 @@
 body {
 
-background-image: url(/css/fundo2.jpg) fixed ;
+background-image: url(/css/fundo2.jpg);
 background-clip: padding-box;
-    background-size:contain;
+    background-size:cover;
    
  
 }
@@ -12,8 +12,8 @@ footer {
 }
 
 img { 
-  width: 50%;
+  width: 10%;
   height: 20%;
-  opacity: 0.3;
-  border-radius: 50px;
+  border-radius: 30px;
+  
 }
