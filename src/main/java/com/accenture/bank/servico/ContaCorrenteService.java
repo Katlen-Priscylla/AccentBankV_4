@@ -85,6 +85,7 @@ public class ContaCorrenteService {
 		valor = contaCorrente.getSaldo() - valor;
 		contaCorrente.setSaldo(valor);
 		contaCorrenteRepository.save(contaCorrente);
+		valortransacao = -valortransacao;
 		Extrato extrato = new Extrato(null, LocalDateTime.now(), valortransacao, transacao, contaCorrente);
 		extratoRepository.save(extrato);
 		return contaCorrente;
